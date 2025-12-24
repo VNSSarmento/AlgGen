@@ -67,9 +67,9 @@ class MainController extends Controller
         $op = $operators[$operation];
 
         $expression = match ($difficulty) {
-            'easy' => "$num1 $op $num2 = ",
-            'medium', 'hard' => "$num1 $op $num2 $op $numRand1 = ",
-            'extreme' => "$num1 $op $num2 $op $numRand1 $op $numRand2 $op $numRand3 = ",
+            'easy' => "$num1 $op $num2",
+            'medium', 'hard' => "$num1 $op $num2 $op $numRand1",
+            'extreme' => "$num1 $op $num2 $op $numRand1 $op $numRand2 $op $numRand3",
         };
 
         $result = match ($difficulty) {

@@ -233,7 +233,7 @@
                             </span>
                             @endif
                         </div>
-                        <div class="flex flex-col items-center justify-center py-1 text-center">
+                        <div class=" flex flex-col items-center gap-10 py-1 text-center">
                             @if (empty(session('exercises')))
                             <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4">
                                 <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,57 +243,48 @@
                             <h3 class="text-sm font-medium text-white mb-1">Nenhum exercício gerado</h3>
                             <p class="text-xs text-gray-500 max-w-xs">Configure as opções ao lado e clique em "Gerar exercícios" para visualizar</p>
                             @else
-                            
-                            <div class="mt-6 bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+
+                            <div class="mt-2 w-full bg-gray-800 rounded-lg border border-gray-700 max-h-[400px] overflow-y-auto">
                                 @foreach (session('exercises',[]) as $exercise)
                                 <div class="flex items-center gap-4 p-4 border-b border-gray-700 hover:bg-gray-750 transition">
                                     <div class="flex-shrink-0 w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
                                         <span class="text-blue-400 text-sm font-bold">{{ $exercise['exercise_number'] }}</span>
                                     </div>
-                                    
+
                                     <div class="flex-1 text-sm font-mono text-white">
                                         {{$exercise['questions']}}
                                     </div>
-                                    
-                                    <input
-                                    type="number"
-                                    placeholder="?"
-                                    class="w-24 bg-gray-900 border border-gray-600 text-white text-center rounded px-3 py-2 focus:border-blue-500 focus:outline-none">
-                                    
-                                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
-                                        Verificar
-                                    </button>
-                                    
                                     <div class="w-10 text-right">
                                         <span class="text-xs text-gray-500 cursor-pointer hover:text-gray-300"
-                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
-                                        ver
-                                    </span>
-                                    <div class="hidden text-green-400 font-bold">
-                                        {{ $exercise['sollution'] }}
+                                            onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                            ver
+                                        </span>
+                                        <div class="hidden text-green-400 font-bold">
+                                            {{ $exercise['sollution'] }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            @endforeach
+                                @endforeach
                                 @endif
-
                             </div>
-
-                        </div>
-                        <div class="flex gap-3 mt-6">
-                            <button disabled class="flex-1 bg-gray-700 text-gray-500 font-medium py-3 rounded-lg cursor-not-allowed flex items-center justify-center space-x-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                                <span class="text-sm">Visualizar</span>
-                            </button>
-                            <button @if(isset($exercises)) disabled @endif class="flex-1 bg-gray-700 text-gray-500 font-medium py-3 rounded-lg cursor-not-allowed flex items-center justify-center space-x-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                </svg>
-                                <span class="text-sm">Download</span>
-                            </button>
+                            @empty(session('exercises'))
+                            @else
+                            <div class="flex gap-3 mt-6">
+                                <button class="flex-1 bg-blue-700 text-white font-medium px-10 py-4 rounded-lg flex items-center justify-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <span class="text-sm">Visualizar</span>
+                                </button>
+                                <button class="flex-1 bg-blue-700 text-white font-medium px-10 py-4 rounded-lg flex items-center justify-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                    <span class="text-sm">Download</span>
+                                </button>
+                            @endempty
+                            </div>
                         </div>
                     </div>
                 </div>
