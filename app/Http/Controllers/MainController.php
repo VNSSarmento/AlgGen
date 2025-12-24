@@ -9,7 +9,8 @@ class MainController extends Controller
 {
     public function home(): View
     {
-        return view('home');
+        $exercises = session('exercises', []);
+        return view('home', compact('exercises'));
     }
 
     public function generateExercises(Request $request)
@@ -38,7 +39,9 @@ class MainController extends Controller
             $operation = $operations[array_rand($operations)];
             $number1 = 0;
             $number2 = 0;
-            $numberRand = rand(1, 999);
+            $numberRand1 = rand(1, 999);
+            $numberRand2 = rand(1, 999);
+            $numberRand3 = rand(1, 999);
 
             [$number1, $number2] = match ($request->difficulty) {
                 'easy' => [rand(1, 101), rand(1, 101)],
@@ -47,26 +50,26 @@ class MainController extends Controller
                 'extreme' => [rand(50, 999), rand(100, 999)],
             };
 
-            $exercise = $this->buildExercise($operation, $request->difficulty, $number1, $number2, $numberRand);
+            $exercise = $this->buildExercise($operation, $request->difficulty, $number1, $number2, $numberRand1, $numberRand2, $numberRand3);
             $exercises[] = [
                 'exercise_number' => $index,
-                'exercise' => $exercise['expression'],
+                'questions' => $exercise['expression'],
                 'sollution' => $exercise['result']
             ];
         }
 
-        dd($exercises);
+        return redirect()->route('home')->with('exercises', $exercises);
     }
 
-    public function buildExercise($operation, $difficulty, $num1, $num2, $numRand)
+    public function buildExercise($operation, $difficulty, $num1, $num2, $numRand1, $numRand2, $numRand3)
     {
         $operators = ['sum' => '+', 'sub' => '-', 'mult' => '*', 'div' => '/'];
         $op = $operators[$operation];
 
         $expression = match ($difficulty) {
             'easy' => "$num1 $op $num2 = ",
-            'medium', 'hard' => "$num1 $op $num2 $op $numRand = ",
-            'extreme' => "$num1 $op $num2 $op $numRand $op $numRand $op $numRand = ",
+            'medium', 'hard' => "$num1 $op $num2 $op $numRand1 = ",
+            'extreme' => "$num1 $op $num2 $op $numRand1 $op $numRand2 $op $numRand3 = ",
         };
 
         $result = match ($difficulty) {
@@ -77,20 +80,20 @@ class MainController extends Controller
                 'div' => $num1 / $num2,
             },
             'medium', 'hard' => match ($operation) {
-                'sum' => $num1 + $num2 + $numRand,
-                'sub' => $num1 - $num2 - $numRand,
-                'mult' => $num1 * $num2 * $numRand,
-                'div' => $num1 / $num2 / $numRand,
+                'sum' => $num1 + $num2 + $numRand1,
+                'sub' => $num1 - $num2 - $numRand1,
+                'mult' => $num1 * $num2 * $numRand1,
+                'div' => $num1 / $num2 / $numRand1,
             },
             'extreme' => match ($operation) {
-                'sum' => $num1 + $num2 + $numRand + $numRand + $numRand,
-                'sub' => $num1 - $num2 - $numRand - $numRand - $numRand,
-                'mult' => $num1 * $num2 * $numRand * $numRand * $numRand,
-                'div' => $num1 / $num2 / $numRand / $numRand / $numRand,
+                'sum' => $num1 + $num2 + $numRand1 + $numRand2 + $numRand3,
+                'sub' => $num1 - $num2 - $numRand1 - $numRand2 - $numRand3,
+                'mult' => $num1 * $num2 * $numRand1 * $numRand2 * $numRand3,
+                'div' => $num1 / $num2 / $numRand1 / $numRand2 / $numRand3,
             },
         };
 
-        return ['expression' => $expression, 'result' => $result];
+        return ['expression' => $expression, 'result' => round($result, 2)];
     }
 
     public function showExercises() {}

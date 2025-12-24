@@ -10,7 +10,6 @@
 
 <body class="bg-gray-900">
 
-    <!-- Header -->
     <header class="bg-gray-800 border-b border-gray-700">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
@@ -31,10 +30,8 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 max-w-7xl">
 
-        <!-- Progress Steps -->
         <div class="mb-8">
             <div class="flex items-center justify-between max-w-2xl mx-auto">
                 <div class="flex flex-col items-center">
@@ -54,7 +51,6 @@
             </div>
         </div>
 
-        <!-- Info Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 mb-5">
             <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 flex items-start space-x-3">
                 <div class="bg-blue-900/50 p-2 rounded-lg">
@@ -93,10 +89,8 @@
             </div>
         </div>
 
-        <!-- Main Card -->
         <div class="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden">
 
-            <!-- Card Header -->
             <div class="bg-gradient-to-r from-gray-800 to-gray-750 px-6 py-5 border-b border-gray-700">
                 <h2 class="text-xl font-bold text-white">Configure seus exercícios</h2>
                 <p class="text-sm text-gray-400 mt-1">Escolha as operações e a quantidade de questões</p>
@@ -105,11 +99,9 @@
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                    <!-- Left Column - Configuration -->
                     <div class="space-y-6">
                         <form action="{{ route('generate') }}" method="post">
                             @csrf
-                            <!-- Operation Types -->
                             <div>
                                 @if ($errors->hasAny(['sum','sub','mult','div']))
                                 <div class="text-red-500 mb-3">
@@ -174,10 +166,8 @@
                                         </svg>
                                     </label>
                                 </div>
-
                             </div>
 
-                            <!-- Number of Questions with Slider -->
                             <div>
                                 <label class="block text-sm font-semibold text-white mb-3">
                                     Quantidade de questões
@@ -193,7 +183,6 @@
                                 </div>
                             </div>
 
-                            <!-- Difficulty Level -->
                             <div>
                                 <label class="block text-sm font-semibold text-white mb-3">
                                     Nível de dificuldade
@@ -226,7 +215,6 @@
                                 </div>
                             </div>
 
-                            <!-- Generate Button -->
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-xl transition duration-200 shadow-lg hover:shadow-blue-900/50 flex items-center justify-center space-x-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -236,15 +224,17 @@
                         </form>
                     </div>
 
-                    <!-- Right Column - Preview -->
                     <div class="bg-gray-750 rounded-xl p-6 border border-gray-700">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-sm font-semibold text-white">Prévia dos exercícios</h3>
-                            <span class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded-full border border-gray-700">0 questões</span>
+                            @if (!empty($exercises))
+                            <span class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded-full border border-gray-700">
+                                {{ count($exercises) }} questões
+                            </span>
+                            @endif
                         </div>
-
-                        <!-- Empty State -->
-                        <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <div class="flex flex-col items-center justify-center py-1 text-center">
+                            @if (empty(session('exercises')))
                             <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4">
                                 <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -252,9 +242,44 @@
                             </div>
                             <h3 class="text-sm font-medium text-white mb-1">Nenhum exercício gerado</h3>
                             <p class="text-xs text-gray-500 max-w-xs">Configure as opções ao lado e clique em "Gerar exercícios" para visualizar</p>
-                        </div>
+                            @else
+                            
+                            <div class="mt-6 bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                                @foreach (session('exercises',[]) as $exercise)
+                                <div class="flex items-center gap-4 p-4 border-b border-gray-700 hover:bg-gray-750 transition">
+                                    <div class="flex-shrink-0 w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
+                                        <span class="text-blue-400 text-sm font-bold">{{ $exercise['exercise_number'] }}</span>
+                                    </div>
+                                    
+                                    <div class="flex-1 text-sm font-mono text-white">
+                                        {{$exercise['questions']}}
+                                    </div>
+                                    
+                                    <input
+                                    type="number"
+                                    placeholder="?"
+                                    class="w-24 bg-gray-900 border border-gray-600 text-white text-center rounded px-3 py-2 focus:border-blue-500 focus:outline-none">
+                                    
+                                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+                                        Verificar
+                                    </button>
+                                    
+                                    <div class="w-10 text-right">
+                                        <span class="text-xs text-gray-500 cursor-pointer hover:text-gray-300"
+                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        ver
+                                    </span>
+                                    <div class="hidden text-green-400 font-bold">
+                                        {{ $exercise['sollution'] }}
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                                @endif
 
-                        <!-- Action Buttons (disabled state) -->
+                            </div>
+
+                        </div>
                         <div class="flex gap-3 mt-6">
                             <button disabled class="flex-1 bg-gray-700 text-gray-500 font-medium py-3 rounded-lg cursor-not-allowed flex items-center justify-center space-x-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,7 +288,7 @@
                                 </svg>
                                 <span class="text-sm">Visualizar</span>
                             </button>
-                            <button disabled class="flex-1 bg-gray-700 text-gray-500 font-medium py-3 rounded-lg cursor-not-allowed flex items-center justify-center space-x-2">
+                            <button @if(isset($exercises)) disabled @endif class="flex-1 bg-gray-700 text-gray-500 font-medium py-3 rounded-lg cursor-not-allowed flex items-center justify-center space-x-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                 </svg>
@@ -271,10 +296,8 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
-        </div>
     </main>
 
     <footer class="flex text-white p-5 justify-center text-center mt-10 border-t border-t-gray-700">
