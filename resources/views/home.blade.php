@@ -277,7 +277,7 @@
         </div>
     </main>
 
-    <footer class="flex text-white p-10 justify-center text-center mt-10 border-t border-t-gray-700">
+    <footer class="flex text-white p-5 justify-center text-center mt-10 border-t border-t-gray-700">
         <p>AlgGen&copy; {{ date('Y') }}</p>
     </footer>
 
