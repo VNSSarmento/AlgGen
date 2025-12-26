@@ -10,3 +10,4 @@ Route::get('/', function () {
 Route::post('/post',[MainController::class,'generateExercises'])->name('generate');
 Route::get('/show',[MainController::class,'showExercises'])->name('show');
 Route::get('/export',[MainController::class,'exportExercises'])->name('export');
+Route::get('/exportpdf',[MainController::class,'exportExercisesPDF'])->name('exportPDF');
